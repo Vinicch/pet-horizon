@@ -105,8 +105,6 @@ const save = async () => {
   user.value.lat = location.lat()
   user.value.long = location.lng()
 
-  console.log(user.value)
-
   if (!canSave.value) return
 
   if (user.value.id) {
