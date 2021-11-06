@@ -5,35 +5,29 @@ namespace apifmu.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {
+        public DbSet<Pet> Pet { get; set; }
 
-        }
+        public DbSet<Ong> Ong { get; set; }
+
+        public DbSet<User> User { get; set; }
+
+        public DbSet<Adoption> Adoption { get; set; }
+
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Usuario>()
+            builder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
-            builder.Entity<Usuario>()
-                .HasIndex(u => u.Cpf)
+            builder.Entity<User>()
+                .HasIndex(u => u.Uin)
                 .IsUnique();
 
-            builder.Entity<Ongs>()
-                .HasIndex(u => u.Cnpj)
+            builder.Entity<Ong>()
+                .HasIndex(u => u.Uin)
                 .IsUnique();
         }
-        public DbSet<Animal> animal { get; set; }
-        public DbSet<Cliente> cliente { get; set; }
-        public DbSet<Endereco> endereco { get; set; }
-        public DbSet<Ongs> ongs { get; set; }
-        public DbSet<Pessoa> pessoa { get; set; }
-        public DbSet<Usuario> usuario { get; set; }
-        public DbSet<UsuarioDados> usuariodados { get; set; }
-        public DbSet<Forum> forum { get; set; }
-        public DbSet<Adoption> adoption { get; set; }
-        public DbSet<ForumResposta> forumresposta { get; set; }
-
     }
 }

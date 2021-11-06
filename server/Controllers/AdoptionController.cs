@@ -1,76 +1,94 @@
 using System;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using apifmu.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apifmu.Models;
-using Microsoft.AspNetCore.Cors;
 
 namespace apifmu.Controllers
 {
     [Controller]
-    [Route("adoption")]
+    [Route("adoptions")]
     public class AdoptionController : ControllerBase
     {
+        private DataContext _dbContext;
 
-        private DataContext dataContext;
-
-        public AdoptionController(DataContext context)
+        public AdoptionController(DataContext dbContext)
         {
-            this.dataContext = context;
+            _dbContext = dbContext;
         }
 
-        //https://localhost:5001/Animal (passar json body)
-        [HttpPost]
-        public async Task<ActionResult> cadastrar([FromBody] Adoption p)
+        //https://localhost:5001/pets/2
+        [HttpGet("{id}")]
+        public async Task<ActionResult> Get(int id)
         {
-            try{
+            if (id <= 0)
+            {
+                return NotFound();
+            }
 
-            dataContext.adoption.Add(p);
-            await dataContext.SaveChangesAsync();
-            return Created("Objeto adoption", p);
-            }catch(Exception e){
+            var entity = await _dbContext.Adoption.FindAsync(id);
+
+            return Ok(entity);
+        }
+
+        //https://localhost:5001/pets
+        [HttpGet]
+        public async Task<ActionResult> GetAll()
+        {
+            var entities = await _dbContext.Adoption.ToListAsync();
+
+            return Ok(entities);
+        }
+
+        //https://localhost:5001/pets (passar json body)
+        [HttpPost]
+        public async Task<ActionResult> Create([FromBody] Adoption entity)
+        {
+            try
+            {
+                entity.Id = new Random().Next(1, int.MaxValue);
+
+                _dbContext.Adoption.Add(entity);
+
+                await _dbContext.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
                 return NotFound(e);
             }
         }
 
-        //https://localhost:5001/Animal
-        [HttpGet]
-        public async Task<ActionResult> listar()
+        //https://localhost:5001/pets(json completo com o codigo)
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody] Adoption entity)
         {
-            var dados = await dataContext.adoption.ToListAsync();
-            return Ok(dados);
+            _dbContext.Adoption.Update(entity);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(entity);
         }
 
-        //https://localhost:5001/Animal/2
-        [HttpGet("{codigo}")]
-        public Adoption filtrar(int codigo)
+
+        //https://localhost:5001/pets/1
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            Adoption p = dataContext.adoption.Find(codigo);
-            return p;
-        }
+            var entity = await _dbContext.Adoption.FindAsync(id);
 
-        //https://localhost:5001/Animal(json completo com o codigo)
-         [HttpPut]
-        public async Task<ActionResult> editar([FromBody] Adoption p)
-        {
-            dataContext.adoption.Update(p);
-            await dataContext.SaveChangesAsync();
-            return Ok(p);
-        }
-        
+            if (entity != null)
+            {
+                _dbContext.Remove(entity);
 
-        //https://localhost:5001/Animal/1
-        [HttpDelete("{codigo}")]
-        public async Task<ActionResult> delete(int codigo){
+                await _dbContext.SaveChangesAsync();
 
-            Adoption p = filtrar(codigo);
-            if(p != null){
-                dataContext.Remove(p);
-                await dataContext.SaveChangesAsync();
                 return Ok();
-            }else{
+            }
+            else
+            {
                 return NotFound();
             }
 

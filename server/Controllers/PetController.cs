@@ -8,17 +8,17 @@ using apifmu.Models;
 namespace apifmu.Controllers
 {
     [Controller]
-    [Route("ongs")]
-    public class OngController : ControllerBase
+    [Route("pets")]
+    public class PetController : ControllerBase
     {
         private DataContext _dbContext;
 
-        public OngController(DataContext dbContext)
+        public PetController(DataContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        //https://localhost:5001/Ongs/2
+        //https://localhost:5001/Animal/2
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -27,29 +27,29 @@ namespace apifmu.Controllers
                 return NotFound();
             }
 
-            var entity = await _dbContext.Ong.FindAsync(id);
+            var entity = await _dbContext.Pet.FindAsync(id);
 
             return Ok(entity);
         }
 
-        //https://localhost:5001/Ongs
+        //https://localhost:5001/Animal
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            var entities = await _dbContext.Ong.ToListAsync();
+            var entities = await _dbContext.Pet.ToListAsync();
 
             return Ok(entities);
         }
 
-        //https://localhost:5001/Ongs (passar json body)
+        //https://localhost:5001/Animal (passar json body)
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] Ong entity)
+        public async Task<ActionResult> Create([FromBody] Pet entity)
         {
             try
             {
                 entity.Id = new Random().Next(1, int.MaxValue);
 
-                _dbContext.Ong.Add(entity);
+                _dbContext.Pet.Add(entity);
 
                 await _dbContext.SaveChangesAsync();
 
@@ -61,11 +61,11 @@ namespace apifmu.Controllers
             }
         }
 
-        //https://localhost:5001/Ongs(json completo com o codigo)
+        //https://localhost:5001/Animal(json completo com o codigo)
         [HttpPut]
-        public async Task<ActionResult> Update([FromBody] Ong entity)
+        public async Task<ActionResult> Update([FromBody] Pet entity)
         {
-            _dbContext.Ong.Update(entity);
+            _dbContext.Pet.Update(entity);
 
             await _dbContext.SaveChangesAsync();
 
@@ -73,11 +73,11 @@ namespace apifmu.Controllers
         }
 
 
-        //https://localhost:5001/Ongs/1
+        //https://localhost:5001/Animal/1
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var entity = await _dbContext.Ong.FindAsync(id);
+            var entity = await _dbContext.Pet.FindAsync(id);
 
             if (entity != null)
             {
