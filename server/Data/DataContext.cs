@@ -37,5 +37,3 @@ namespace apifmu.Data
 
     }
 }
-
-// "Default": "Server=databasefmu.c1pazaf62rtn.us-east-2.rds.amazonaws.com;Port=3306;Database=databasefmu;Uid=admin;Pwd=laekle050404;charset=utf8;"
