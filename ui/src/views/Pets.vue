@@ -57,6 +57,8 @@
 import { Ong } from '@/models/ong'
 import { defaultPet, Pet } from '@/models/pet'
 import axios from 'axios'
+import { ElMessage } from 'element-plus/lib/components/message'
+import { ElMessageBox } from 'element-plus/lib/components/message-box'
 import { computed, onMounted, ref } from 'vue'
 
 //#region List
@@ -113,10 +115,30 @@ const save = async () => {
 }
 
 const remove = async () => {
-  await axios.delete(`/pets/${pet.value.id}`)
-  getAll()
+  const id = pet.value.id
 
   closeModal()
+
+  ElMessageBox.confirm('Você tem certeza que deseja remover esse registro?', 'Warning', {
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Cancelar',
+    type: 'warning',
+  })
+    .then(async () => {
+      await axios.delete(`/pets/${id}`)
+      getAll()
+
+      ElMessage({
+        type: 'success',
+        message: 'Delete completed',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Delete canceled',
+      })
+    })
 }
 
 //#endregion Modal

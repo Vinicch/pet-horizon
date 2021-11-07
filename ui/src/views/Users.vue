@@ -73,6 +73,8 @@ import { Ong } from '@/models/ong'
 import { defaultUser, User } from '@/models/user'
 import { getLocation } from '@/utils/google-maps'
 import axios from 'axios'
+import { ElMessage } from 'element-plus/lib/components/message'
+import { ElMessageBox } from 'element-plus/lib/components/message-box'
 import { computed, onMounted, ref } from 'vue'
 
 //#region List
@@ -136,10 +138,30 @@ const save = async () => {
 }
 
 const remove = async () => {
-  await axios.delete(`/users/${user.value.id}`)
-  getAll()
+  const id = user.value.id
 
   closeModal()
+
+  ElMessageBox.confirm('Você tem certeza que deseja remover esse registro?', 'Warning', {
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Cancelar',
+    type: 'warning',
+  })
+    .then(async () => {
+      await axios.delete(`/users/${id}`)
+      getAll()
+
+      ElMessage({
+        type: 'success',
+        message: 'Delete completed',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Delete canceled',
+      })
+    })
 }
 
 //#endregion Modal

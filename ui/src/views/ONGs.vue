@@ -34,6 +34,8 @@ import { defaultOng, Ong } from '@/models/ong'
 import { computed, onMounted, ref } from 'vue'
 import { getLocation } from '@/utils/google-maps'
 import axios from 'axios'
+import { ElMessageBox } from 'element-plus/lib/components/message-box'
+import { ElMessage } from 'element-plus/lib/components/message'
 
 //#region List
 
@@ -84,11 +86,31 @@ const save = async () => {
   closeModal()
 }
 
-const remove = async () => {
-  await axios.delete(`/ongs/${ong.value.id}`)
-  getAll()
+const remove = () => {
+  const id = ong.value.id
 
   closeModal()
+
+  ElMessageBox.confirm('Você tem certeza que deseja remover esse registro?', 'Warning', {
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Cancelar',
+    type: 'warning',
+  })
+    .then(async () => {
+      await axios.delete(`/ongs/${id}`)
+      getAll()
+
+      ElMessage({
+        type: 'success',
+        message: 'Delete completed',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Delete canceled',
+      })
+    })
 }
 
 //#endregion Modal
