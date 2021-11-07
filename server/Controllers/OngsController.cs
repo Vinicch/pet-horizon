@@ -4,6 +4,7 @@ using apifmu.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apifmu.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace apifmu.Controllers
 {
@@ -19,6 +20,7 @@ namespace apifmu.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Get(int id)
         {
             if (id <= 0)
@@ -32,6 +34,7 @@ namespace apifmu.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> GetAll()
         {
             var entities = await _dbContext.Ong.ToListAsync();
@@ -40,6 +43,7 @@ namespace apifmu.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Create([FromBody] Ong entity)
         {
             try
@@ -59,6 +63,7 @@ namespace apifmu.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Update([FromBody] Ong entity)
         {
             _dbContext.Ong.Update(entity);
@@ -70,6 +75,7 @@ namespace apifmu.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Delete(int id)
         {
             var entity = await _dbContext.Ong.FindAsync(id);

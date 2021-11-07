@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using apifmu.Data;
 using apifmu.Dtos;
 using apifmu.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ namespace apifmu.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> Auth([FromBody] AuthDto dto)
         {
             var user = await _dbContext.User

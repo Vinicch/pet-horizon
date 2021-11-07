@@ -13,13 +13,14 @@ namespace apifmu.Utils
         {
             var handler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("fedaf7d8863b48e197b9287d492b708e");
+            var userHasOngId = user.OngId > 0;
 
             var descriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(ClaimTypes.Role, user.OngId.ToString())
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, userHasOngId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

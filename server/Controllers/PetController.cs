@@ -8,6 +8,7 @@ using apifmu.Dtos;
 using System.Linq;
 using Geolocation;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace apifmu.Controllers
 {
@@ -23,6 +24,7 @@ namespace apifmu.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Get(int id)
         {
             if (id <= 0)
@@ -40,6 +42,7 @@ namespace apifmu.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> GetAll()
         {
             var entities = await _dbContext.Pet
@@ -51,6 +54,7 @@ namespace apifmu.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Create([FromBody] Pet entity)
         {
             try
@@ -70,6 +74,7 @@ namespace apifmu.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Update([FromBody] Pet entity)
         {
             _dbContext.Pet.Update(entity);
@@ -80,6 +85,7 @@ namespace apifmu.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "true")]
         public async Task<ActionResult> Delete(int id)
         {
             var entity = await _dbContext.Pet.FindAsync(id);
@@ -100,6 +106,7 @@ namespace apifmu.Controllers
         }
 
         [HttpPost("search")]
+        [Authorize]
         public async Task<ActionResult> Search([FromBody] SearchDto dto)
         {
             var pets = await FilterPets(dto);
