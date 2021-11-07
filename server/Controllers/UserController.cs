@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apifmu.Models;
 using System.Linq;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace apifmu.Controllers
 {
@@ -46,6 +48,7 @@ namespace apifmu.Controllers
             try
             {
                 entity.Id = new Random().Next(1, int.MaxValue);
+                entity.Password = HashPassword(entity.Password);
 
                 _dbContext.User.Add(entity);
 
@@ -87,6 +90,26 @@ namespace apifmu.Controllers
                 return NotFound();
             }
 
+        }
+
+        string HashPassword(string password)
+        {
+            var salt = new byte[128 / 8];
+
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetNonZeroBytes(salt);
+            }
+
+            var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password,
+                salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8
+            ));
+
+            return hashed;
         }
     }
 }
