@@ -8,7 +8,7 @@ namespace apifmu.Dtos
 
         public string Size { get; set; }
 
-        public string Sex { get; set; }
+        public char Sex { get; set; }
 
         public string Personality { get; set; }
 

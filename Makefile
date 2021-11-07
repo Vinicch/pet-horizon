@@ -10,4 +10,4 @@ client:
 	cd ui && yarn serve
 
 serve:
-	cd server && dotnet run
+	cd server && dotnet watch run
