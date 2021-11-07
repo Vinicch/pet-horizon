@@ -12,6 +12,7 @@ export interface User {
   hasYard: boolean
   hasWindowBars: boolean
   income: string
+  ongId?: number
 }
 
 export const defaultUser = (): User => {

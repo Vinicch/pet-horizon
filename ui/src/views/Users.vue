@@ -28,13 +28,37 @@
   <el-dialog v-model="isModalVisible" title="Criar usuário" :before-close="closeModal">
     <el-input v-model="user.name" placeholder="Nome" />
     <el-input v-model="user.email" placeholder="E-mail" />
+    <el-input v-if="!user.id" v-model="user.password" placeholder="Senha" show-password />
     <el-input v-model="user.uin" placeholder="CPF" />
     <el-input v-model="user.address" placeholder="Endereço" />
-    <el-input v-model="user.residence" placeholder="Residência" />
-    <el-input v-model="user.residenceSize" placeholder="Tamanho da Residência" />
-    <el-input v-model="user.hasYard" placeholder="Possui Quintal" />
-    <el-input v-model="user.hasWindowBars" placeholder="Possui Grades/Telas" />
-    <el-input v-model="user.income" placeholder="Renda" />
+
+    <el-select v-model="user.residence" placeholder="Residência">
+      <el-option label="Casa" value="Casa"></el-option>
+      <el-option label="Kitnet" value="Kitnet"></el-option>
+      <el-option label="Apartamento" value="Apartamento"></el-option>
+      <el-option label="Sobrado" value="Grande"></el-option>
+    </el-select>
+
+    <el-select v-model="user.residenceSize" placeholder="Tamanho da Residência">
+      <el-option label="Pequena" value="Pequena"></el-option>
+      <el-option label="Média" value="Média"></el-option>
+      <el-option label="Grande" value="Grande"></el-option>
+    </el-select>
+
+    <el-checkbox v-model="user.hasYard" label="Possui Quintal" />
+    <el-checkbox v-model="user.hasWindowBars" label="Possui Grades/Telas" />
+    <br />
+    <el-select v-model="user.income" placeholder="Renda">
+      <el-option label="Até R$ 1.800,00" value="Até R$ 1.800,00"></el-option>
+      <el-option label="R$ 1.801 até R$ 2.600,00" value="R$ 1.801 até R$ 2.600,00"></el-option>
+      <el-option label="R$2.601 até R$ 4.000,00" value="R$2.601 até R$ 4.000,00"></el-option>
+      <el-option label="R$4.001 até R$ 9.000,00" value="R$4.001 até R$ 9.000,00"></el-option>
+    </el-select>
+
+    <el-select v-model="user.ongId" placeholder="ONG associada">
+      <el-option :label="'Nenhuma'" :value="null"></el-option>
+      <el-option v-for="ong in ongs" :key="ong.id" :label="ong.name" :value="ong.id"></el-option>
+    </el-select>
 
     <template #footer>
       <el-button @click="closeModal()">Cancelar</el-button>
@@ -45,29 +69,21 @@
 </template>
 
 <script setup lang="ts">
+import { Ong } from '@/models/ong'
 import { defaultUser, User } from '@/models/user'
 import { getLocation } from '@/utils/google-maps'
-import { computed, ref } from 'vue'
+import axios from 'axios'
+import { computed, onMounted, ref } from 'vue'
 
 //#region List
 
-const users = ref<User[]>([
-  {
-    id: 1,
-    name: 'Vinícius Leme Alves',
-    email: 'vibalta@gmail.com',
-    password: 'admin@123',
-    uin: '41825251835',
-    address: 'Rua Marco Rodrigues, 50',
-    lat: 32.123123,
-    long: 19.465645,
-    residence: 'Casa',
-    residenceSize: 'Grande',
-    hasYard: true,
-    hasWindowBars: true,
-    income: '1501 a 3000',
-  },
-])
+const users = ref<User[]>([])
+
+const getAll = () => {
+  axios.get('/users').then((resp) => (users.value = resp.data))
+}
+
+onMounted(() => getAll())
 
 //#endregion List
 
@@ -75,8 +91,9 @@ const users = ref<User[]>([
 
 const isModalVisible = ref(false)
 const user = ref(defaultUser())
-const canSave = computed(
-  () =>
+const ongs = ref<Ong[]>([])
+const canSave = computed(() => {
+  return (
     !!user.value.name &&
     !!user.value.email &&
     !!user.value.password &&
@@ -84,10 +101,12 @@ const canSave = computed(
     !!user.value.address &&
     !!user.value.residence &&
     !!user.value.residenceSize &&
-    !!user.value.income,
-)
+    !!user.value.income
+  )
+})
 
 const openModal = (id?: number) => {
+  axios.get('/ongs').then((resp) => (ongs.value = resp.data))
   user.value = users.value.find((e) => e.id === id) ?? user.value
   isModalVisible.value = true
 }
@@ -98,26 +117,27 @@ const closeModal = () => {
 }
 
 const save = async () => {
+  if (!canSave.value) return
+
   const location = await getLocation(user.value.address)
 
   user.value.lat = location.lat()
   user.value.long = location.lng()
 
-  if (!canSave.value) return
-
   if (user.value.id) {
-    const index = users.value.findIndex((e) => e.id === user.value.id)
-
-    users.value[index] = user.value
+    await axios.put('/users', user.value)
+    getAll()
   } else {
-    users.value.push({ ...user.value, id: users.value.length + 1 })
+    await axios.post('/users', user.value)
+    getAll()
   }
 
   closeModal()
 }
 
-const remove = () => {
-  users.value = users.value.filter((e) => e.id !== user.value.id)
+const remove = async () => {
+  await axios.delete(`/users/${user.value.id}`)
+  getAll()
 
   closeModal()
 }
