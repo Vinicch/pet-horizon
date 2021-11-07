@@ -31,21 +31,24 @@
 
 <script setup lang="ts">
 import { defaultOng, Ong } from '@/models/ong'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { getLocation } from '@/utils/google-maps'
+import axios from 'axios'
+import { useStore } from 'vuex'
+
+const store = useStore()
 
 //#region List
 
-const ongs = ref<Ong[]>([
-  {
-    id: 1,
-    name: 'Doguinho Feliz',
-    uin: '12312312313',
-    address: 'Rua Marco Rodrigues, 50',
-    lat: 32.123123,
-    long: 9.465645,
-  },
-])
+let ongs = ref<Ong[]>([])
+
+const getAll = () => {
+  store.commit('loading/startLoading', 'Listando unidades...')
+  axios.get('/ongs').then((resp) => (ongs.value = resp.data))
+  store.commit('loading/stopLoading')
+}
+
+onMounted(() => getAll())
 
 //#endregion List
 
@@ -53,9 +56,7 @@ const ongs = ref<Ong[]>([
 
 const isModalVisible = ref(false)
 const ong = ref(defaultOng())
-const canSave = computed(
-  () => !!ong.value.address && !!ong.value.lat && ong.value.long && !!ong.value.name && !!ong.value.uin,
-)
+const canSave = computed(() => !!ong.value.address && !!ong.value.name && !!ong.value.uin)
 
 const openModal = (id?: number) => {
   ong.value = ongs.value.find((e) => e.id === id) ?? ong.value
@@ -68,26 +69,32 @@ const closeModal = () => {
 }
 
 const save = async () => {
+  if (!canSave.value) return
+
   const location = await getLocation(ong.value.address)
 
   ong.value.lat = location.lat()
   ong.value.long = location.lng()
 
-  if (!canSave.value) return
-
   if (ong.value.id) {
-    const index = ongs.value.findIndex((e) => e.id === ong.value.id)
-
-    ongs.value[index] = ong.value
+    store.commit('loading/startLoading', 'Criando unidade...')
+    await axios.put('/ongs', ong.value)
+    getAll()
   } else {
-    ongs.value.push({ ...ong.value, id: ongs.value.length + 1 })
+    store.commit('loading/startLoading', 'Atualizando unidade...')
+    await axios.post('/ongs', ong.value)
+    getAll()
   }
+
+  store.commit('loading/stopLoading')
 
   closeModal()
 }
 
-const remove = () => {
-  ongs.value = ongs.value.filter((e) => e.id !== ong.value.id)
+const remove = async () => {
+  store.commit('loading/startLoading', 'Removendo unidade...')
+  await axios.delete(`/ongs/${ong.value.id}`)
+  getAll()
 
   closeModal()
 }

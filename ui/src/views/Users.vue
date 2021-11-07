@@ -82,8 +82,6 @@ const canSave = computed(
     !!user.value.password &&
     !!user.value.uin &&
     !!user.value.address &&
-    !!user.value.lat &&
-    !!user.value.long &&
     !!user.value.residence &&
     !!user.value.residenceSize &&
     !!user.value.income,
