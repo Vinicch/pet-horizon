@@ -4,6 +4,7 @@ using apifmu.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apifmu.Models;
+using System.Linq;
 
 namespace apifmu.Controllers
 {
@@ -18,7 +19,6 @@ namespace apifmu.Controllers
             _dbContext = dbContext;
         }
 
-        //https://localhost:5001/pets/2
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -27,21 +27,28 @@ namespace apifmu.Controllers
                 return NotFound();
             }
 
-            var entity = await _dbContext.Adoption.FindAsync(id);
+            var entity = await _dbContext.Adoption
+                .Include(e => e.Ong)
+                .Include(e => e.Pet)
+                .Include(e => e.User)
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
 
             return Ok(entity);
         }
 
-        //https://localhost:5001/pets
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            var entities = await _dbContext.Adoption.ToListAsync();
+            var entities = await _dbContext.Adoption
+                .Include(e => e.Ong)
+                .Include(e => e.Pet)
+                .Include(e => e.User)
+                .ToListAsync();
 
             return Ok(entities);
         }
 
-        //https://localhost:5001/pets (passar json body)
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] Adoption entity)
         {
@@ -61,10 +68,21 @@ namespace apifmu.Controllers
             }
         }
 
-        //https://localhost:5001/pets(json completo com o codigo)
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] Adoption entity)
         {
+            if (entity.Situation == 'A')
+            {
+                var pet = await _dbContext.Pet.Where(e => e.Id == entity.PetId).FirstOrDefaultAsync();
+
+                pet.WasAdopted = true;
+                pet.UserId = entity.UserId;
+
+                _dbContext.Pet.Update(pet);
+
+                await _dbContext.SaveChangesAsync();
+            }
+
             _dbContext.Adoption.Update(entity);
 
             await _dbContext.SaveChangesAsync();
@@ -72,8 +90,6 @@ namespace apifmu.Controllers
             return Ok(entity);
         }
 
-
-        //https://localhost:5001/pets/1
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

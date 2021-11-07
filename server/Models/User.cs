@@ -8,7 +8,7 @@ namespace apifmu.Models
         [Key]
         public int Id { get; set; }
 
-        public int Name { get; set; }
+        public string Name { get; set; }
 
         public string Email { get; set; }
 
@@ -18,9 +18,9 @@ namespace apifmu.Models
 
         public string Uin { get; set; }
 
-        public decimal Lat { get; set; }
+        public double Lat { get; set; }
 
-        public decimal Long { get; set; }
+        public double Long { get; set; }
 
         public string Residence { get; set; } // Casa / Apto
 

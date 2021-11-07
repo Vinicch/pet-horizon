@@ -4,6 +4,7 @@ using apifmu.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apifmu.Models;
+using System.Linq;
 
 namespace apifmu.Controllers
 {
@@ -18,7 +19,6 @@ namespace apifmu.Controllers
             _dbContext = dbContext;
         }
 
-        //https://localhost:5001/usuario/2
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -27,21 +27,19 @@ namespace apifmu.Controllers
                 return NotFound();
             }
 
-            var entity = await _dbContext.User.FindAsync(id);
+            var entity = await _dbContext.User.Include(e => e.Ong).Where(e => e.Id == id).FirstOrDefaultAsync();
 
             return Ok(entity);
         }
 
-        //https://localhost:5001/usuario
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            var entities = await _dbContext.User.ToListAsync();
+            var entities = await _dbContext.User.Include(e => e.Ong).ToListAsync();
 
             return Ok(entities);
         }
 
-        //https://localhost:5001/usuario (passar json body)
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] User entity)
         {
@@ -61,7 +59,6 @@ namespace apifmu.Controllers
             }
         }
 
-        //https://localhost:5001/usuario(json completo com o codigo)
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] User entity)
         {
@@ -72,8 +69,6 @@ namespace apifmu.Controllers
             return Ok(entity);
         }
 
-
-        //https://localhost:5001/usuario/1
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

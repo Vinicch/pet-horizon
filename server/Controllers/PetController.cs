@@ -4,6 +4,10 @@ using apifmu.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apifmu.Models;
+using apifmu.Dtos;
+using System.Linq;
+using Geolocation;
+using System.Collections.Generic;
 
 namespace apifmu.Controllers
 {
@@ -18,7 +22,6 @@ namespace apifmu.Controllers
             _dbContext = dbContext;
         }
 
-        //https://localhost:5001/Animal/2
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -27,21 +30,26 @@ namespace apifmu.Controllers
                 return NotFound();
             }
 
-            var entity = await _dbContext.Pet.FindAsync(id);
+            var entity = await _dbContext.Pet
+                .Include(e => e.Ong)
+                .Include(e => e.User)
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
 
             return Ok(entity);
         }
 
-        //https://localhost:5001/Animal
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            var entities = await _dbContext.Pet.ToListAsync();
+            var entities = await _dbContext.Pet
+                .Include(e => e.Ong)
+                .Include(e => e.User)
+                .ToListAsync();
 
             return Ok(entities);
         }
 
-        //https://localhost:5001/Animal (passar json body)
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] Pet entity)
         {
@@ -61,7 +69,6 @@ namespace apifmu.Controllers
             }
         }
 
-        //https://localhost:5001/Animal(json completo com o codigo)
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] Pet entity)
         {
@@ -72,8 +79,6 @@ namespace apifmu.Controllers
             return Ok(entity);
         }
 
-
-        //https://localhost:5001/Animal/1
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -92,6 +97,53 @@ namespace apifmu.Controllers
                 return NotFound();
             }
 
+        }
+
+        [HttpPost("search")]
+        public async Task<ActionResult> Search([FromBody] SearchDto dto)
+        {
+            var pets = await FilterPets(dto);
+
+            if (pets.Count == 0)
+            {
+                return Ok(pets);
+            }
+
+            var user = await _dbContext.User.FindAsync(dto.UserId);
+
+            pets = pets.OrderBy(e => CalculateDistance(user, e.Ong)).ToList();
+
+            return Ok(pets);
+        }
+
+        async Task<List<Pet>> FilterPets(SearchDto dto)
+        {
+            var query = _dbContext.Pet.Where(e => e.Size == dto.Size).Where(e => e.Sex == dto.Sex);
+
+            if (!string.IsNullOrWhiteSpace(dto.Breed))
+            {
+                query = query.Where(e => e.Breed == dto.Breed);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Color))
+            {
+                query = query.Where(e => e.Color == dto.Color);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Personality))
+            {
+                query = query.Where(e => e.Personality == dto.Personality);
+            }
+
+            return await query.Include(e => e.Ong).ToListAsync();
+        }
+
+        double CalculateDistance(User user, Ong ong)
+        {
+            var origin = new Coordinate(user.Lat, user.Long);
+            var destination = new Coordinate(ong.Lat, ong.Long);
+
+            return GeoCalculator.GetDistance(origin, destination, 1, DistanceUnit.Kilometers);
         }
     }
 }
