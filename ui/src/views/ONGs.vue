@@ -34,18 +34,13 @@ import { defaultOng, Ong } from '@/models/ong'
 import { computed, onMounted, ref } from 'vue'
 import { getLocation } from '@/utils/google-maps'
 import axios from 'axios'
-import { useStore } from 'vuex'
-
-const store = useStore()
 
 //#region List
 
-let ongs = ref<Ong[]>([])
+const ongs = ref<Ong[]>([])
 
 const getAll = () => {
-  store.commit('loading/startLoading', 'Listando unidades...')
   axios.get('/ongs').then((resp) => (ongs.value = resp.data))
-  store.commit('loading/stopLoading')
 }
 
 onMounted(() => getAll())
@@ -56,7 +51,9 @@ onMounted(() => getAll())
 
 const isModalVisible = ref(false)
 const ong = ref(defaultOng())
-const canSave = computed(() => !!ong.value.address && !!ong.value.name && !!ong.value.uin)
+const canSave = computed(() => {
+  return !!ong.value.address && !!ong.value.name && !!ong.value.uin
+})
 
 const openModal = (id?: number) => {
   ong.value = ongs.value.find((e) => e.id === id) ?? ong.value
@@ -77,22 +74,17 @@ const save = async () => {
   ong.value.long = location.lng()
 
   if (ong.value.id) {
-    store.commit('loading/startLoading', 'Criando unidade...')
     await axios.put('/ongs', ong.value)
     getAll()
   } else {
-    store.commit('loading/startLoading', 'Atualizando unidade...')
     await axios.post('/ongs', ong.value)
     getAll()
   }
-
-  store.commit('loading/stopLoading')
 
   closeModal()
 }
 
 const remove = async () => {
-  store.commit('loading/startLoading', 'Removendo unidade...')
   await axios.delete(`/ongs/${ong.value.id}`)
   getAll()
 

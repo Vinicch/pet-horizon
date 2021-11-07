@@ -12,7 +12,9 @@
     <el-table-column prop="breed" label="Raça" width="180" />
     <el-table-column prop="color" label="Cor" width="180" />
     <el-table-column prop="size" label="Porte" width="180" />
-    <el-table-column prop="sex" label="Sexo" width="180" />
+    <el-table-column prop="sex" label="Sexo" width="180">
+      <template #default="scope">{{ scope.row.sex === 'F' ? 'Feminino' : 'Masculino' }}</template>
+    </el-table-column>
     <el-table-column prop="personality" label="Personalidade" width="180" />
     <el-table-column prop="wasAdopted" label="Adotado" width="180">
       <template #default="scope">{{ scope.row.wasAdopted ? 'Sim' : 'Não' }}</template>
@@ -22,11 +24,26 @@
   <!-- Modal -->
   <el-dialog v-model="isModalVisible" title="Cadastrar pet" :before-close="closeModal">
     <el-input v-model="pet.breed" placeholder="Raça" />
+
     <el-input v-model="pet.color" placeholder="Cor" />
-    <el-input v-model="pet.size" placeholder="Porte" />
-    <el-input v-model="pet.sex" placeholder="Sexo" />
+
+    <el-select v-model="pet.size" placeholder="Porte">
+      <el-option label="Mini" value="Mini"></el-option>
+      <el-option label="Pequeno" value="Pequeno"></el-option>
+      <el-option label="Médio" value="Médio"></el-option>
+      <el-option label="Grande" value="Grande"></el-option>
+      <el-option label="Gigante" value="Gigante"></el-option>
+    </el-select>
+
+    <el-radio v-model="pet.sex" label="F" size="medium">Feminino</el-radio>
+    <el-radio v-model="pet.sex" label="M" size="medium">Masculino</el-radio>
+
     <el-input v-model="pet.personality" placeholder="Personalidade" />
-    <el-input v-model="pet.wasAdopted" placeholder="Foi adotado" />
+
+    <el-select v-model="pet.ongId" placeholder="ONG associada">
+      <el-option :label="'Nenhuma ONG selecionada'" :value="0"></el-option>
+      <el-option v-for="ong in ongs" :key="ong.id" :label="ong.name" :value="ong.id"></el-option>
+    </el-select>
 
     <template #footer>
       <el-button @click="closeModal()">Cancelar</el-button>
@@ -37,22 +54,20 @@
 </template>
 
 <script setup lang="ts">
+import { Ong } from '@/models/ong'
 import { defaultPet, Pet } from '@/models/pet'
-import { computed, ref } from 'vue'
+import axios from 'axios'
+import { computed, onMounted, ref } from 'vue'
 
 //#region List
 
-const pets = ref<Pet[]>([
-  {
-    id: 1,
-    breed: 'Dalmata',
-    color: 'Branco',
-    size: 'Grande',
-    sex: 'F',
-    personality: 'Gentil;Carente',
-    wasAdopted: false,
-  },
-])
+const pets = ref<Pet[]>([])
+
+const getAll = () => {
+  axios.get('/pets').then((resp) => (pets.value = resp.data))
+}
+
+onMounted(() => getAll())
 
 //#endregion List
 
@@ -60,11 +75,20 @@ const pets = ref<Pet[]>([
 
 const isModalVisible = ref(false)
 const pet = ref(defaultPet())
-const canSave = computed(
-  () => !!pet.value.breed && !!pet.value.color && !!pet.value.size && !!pet.value.sex && !!pet.value.personality,
-)
+const ongs = ref<Ong[]>([])
+const canSave = computed(() => {
+  return (
+    !!pet.value.breed &&
+    !!pet.value.color &&
+    !!pet.value.size &&
+    !!pet.value.sex &&
+    !!pet.value.personality &&
+    !!pet.value.ongId
+  )
+})
 
 const openModal = (id?: number) => {
+  axios.get('/ongs').then((resp) => (ongs.value = resp.data))
   pet.value = pets.value.find((e) => e.id === id) ?? pet.value
   isModalVisible.value = true
 }
@@ -74,22 +98,23 @@ const closeModal = () => {
   pet.value = defaultPet()
 }
 
-const save = () => {
+const save = async () => {
   if (!canSave.value) return
 
   if (pet.value.id) {
-    const index = pets.value.findIndex((e) => e.id === pet.value.id)
-
-    pets.value[index] = pet.value
+    await axios.put('/pets', pet.value)
+    getAll()
   } else {
-    pets.value.push({ ...pet.value, id: pets.value.length + 1 })
+    await axios.post('/pets', pet.value)
+    getAll()
   }
 
   closeModal()
 }
 
-const remove = () => {
-  pets.value = pets.value.filter((e) => e.id !== pet.value.id)
+const remove = async () => {
+  await axios.delete(`/pets/${pet.value.id}`)
+  getAll()
 
   closeModal()
 }
