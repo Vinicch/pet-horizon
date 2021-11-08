@@ -23,10 +23,17 @@ namespace apifmu.Controllers
         public async Task<ActionResult> Auth([FromBody] AuthDto dto)
         {
             var user = await _dbContext.User.Where(e => e.Email == dto.Email).FirstOrDefaultAsync();
-            // var isVerified = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
 
             if (user == null)
                 return NotFound();
+
+            if (user.Id != 0)
+            {
+                var isAuthorized = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
+
+                if (!isAuthorized)
+                    return Unauthorized();
+            }
 
             var token = AuthService.GenerateToken(user);
 

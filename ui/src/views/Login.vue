@@ -38,8 +38,6 @@ const login = async () => {
 
   localStorage.setItem('user', JSON.stringify(response.data))
 
-  console.log(router)
-
   router.push('/dashboard')
 }
 </script>
