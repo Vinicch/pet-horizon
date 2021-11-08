@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using apifmu.Data;
 using apifmu.Dtos;
 using apifmu.Utils;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,18 +20,15 @@ namespace apifmu.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<ActionResult> Auth([FromBody] AuthDto dto)
         {
-            var user = await _dbContext.User
-                .Where(e => e.Email == dto.Email)
-                .Where(e => e.Password == dto.Password)
-                .FirstOrDefaultAsync();
+            var user = await _dbContext.User.Where(e => e.Email == dto.Email).FirstOrDefaultAsync();
+            // var isVerified = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
 
             if (user == null)
                 return NotFound();
 
-            var token = TokenService.GenerateToken(user);
+            var token = AuthService.GenerateToken(user);
 
             user.Password = "";
 

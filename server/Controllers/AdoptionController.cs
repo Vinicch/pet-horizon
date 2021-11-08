@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apifmu.Models;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
 
 namespace apifmu.Controllers
 {
@@ -21,7 +20,6 @@ namespace apifmu.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "true")]
         public async Task<ActionResult> Get(int id)
         {
             if (id <= 0)
@@ -40,7 +38,6 @@ namespace apifmu.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "true")]
         public async Task<ActionResult> GetAll()
         {
             var entities = await _dbContext.Adoption
@@ -53,7 +50,6 @@ namespace apifmu.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult> Create([FromBody] Adoption entity)
         {
             try
@@ -73,7 +69,6 @@ namespace apifmu.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "true")]
         public async Task<ActionResult> Update([FromBody] Adoption entity)
         {
             if (entity.Situation == 'A')
@@ -96,7 +91,6 @@ namespace apifmu.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "true")]
         public async Task<ActionResult> Delete(int id)
         {
             var entity = await _dbContext.Adoption.FindAsync(id);

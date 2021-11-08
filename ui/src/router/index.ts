@@ -1,39 +1,73 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
-import Ongs from '../views/ONGs.vue'
-import Pets from '../views/Pets.vue'
-import Users from '../views/Users.vue'
+import BaseApp from '@/views/Base.vue'
+import Dashboard from '@/views/Dashboard.vue'
+import Login from '@/views/Login.vue'
+import Ongs from '@/views/ONGs.vue'
+import Pets from '@/views/Pets.vue'
+import Users from '@/views/Users.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Dashboard',
-    component: Dashboard,
+    name: 'BaseApp',
+    component: BaseApp,
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: Dashboard,
+      },
+      {
+        path: 'ongs',
+        name: 'ONGs',
+        component: Ongs,
+      },
+      {
+        path: 'pets',
+        name: 'Pets',
+        component: Pets,
+      },
+      {
+        path: 'users',
+        name: 'Users',
+        component: Users,
+      },
+    ],
   },
   {
-    path: '/ongs',
-    name: 'ONGs',
-    component: Ongs,
-  },
-  {
-    path: '/pets',
-    name: 'Pets',
-    component: Pets,
-  },
-  {
-    path: '/users',
-    name: 'Users',
-    component: Users,
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      requiresAuth: false,
+    },
   },
   {
     path: '/:pathMatch(.*)*',
     redirect: '/',
+    meta: {
+      requiresAuth: true,
+    },
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+})
+
+router.beforeEach((to, _, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const userData = localStorage.getItem('user')
+
+    if (!userData) next({ path: 'login' })
+    else next()
+  } else {
+    next()
+  }
 })
 
 export default router

@@ -7,7 +7,7 @@
     text-color="#8685EF"
     active-text-color="#F6B162"
   >
-    <el-menu-item index="/">
+    <el-menu-item index="/dashboard">
       <i class="fas fa-columns" /> &nbsp;
       <span>Dashboard</span>
     </el-menu-item>

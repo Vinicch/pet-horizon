@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace apifmu.Utils
 {
-    public class TokenService
+    public class AuthService
     {
         public static string GenerateToken(User user)
         {
