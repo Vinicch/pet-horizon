@@ -38,7 +38,8 @@ const login = async () => {
 
   localStorage.setItem('user', JSON.stringify(response.data))
 
-  router.push('/dashboard')
+  if (response.data.user.ongId) router.push('/dashboard')
+  else router.push('/search')
 }
 </script>
 

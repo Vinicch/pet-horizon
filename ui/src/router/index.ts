@@ -5,6 +5,8 @@ import Login from '@/views/Login.vue'
 import Ongs from '@/views/ONGs.vue'
 import Pets from '@/views/Pets.vue'
 import Users from '@/views/Users.vue'
+import Search from '@/views/Search.vue'
+import Requests from '@/views/Requests.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -34,6 +36,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'users',
         name: 'Users',
         component: Users,
+      },
+      {
+        path: 'search',
+        name: 'Search',
+        component: Search,
+      },
+      {
+        path: 'requests',
+        name: 'Requests',
+        component: Requests,
       },
     ],
   },
