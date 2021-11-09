@@ -1,3 +1,4 @@
+.PHONY: api ui
 .SILENT:
 
 up:
@@ -6,8 +7,8 @@ up:
 down:
 	docker compose down --remove-orphans
 
-client:
-	cd ui && yarn serve
+api: up
+	cd api && dotnet watch run
 
-serve:
-	cd server && dotnet watch run
+ui:
+	cd ui && yarn serve
