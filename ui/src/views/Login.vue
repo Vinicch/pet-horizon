@@ -1,4 +1,5 @@
 <template>
+  <!-- Login -->
   <div class="login">
     <el-card>
       <h2>Login</h2>
@@ -12,35 +13,157 @@
         <el-form-item>
           <el-button class="login-button" type="primary" native-type="submit" block>Login</el-button>
         </el-form-item>
+        <a href="#" @click="isModalOpen = true">Não tem uma conta? Cadastre-se!</a>
       </el-form>
     </el-card>
   </div>
+
+  <!-- Registration -->
+  <el-dialog v-model="isModalOpen" title="Cadastro" :before-close="closeModal">
+    <el-row><el-input v-model="user.name" placeholder="Nome *" /></el-row>
+    <el-row><el-input v-model="user.email" placeholder="E-mail *" /></el-row>
+    <el-row><el-input v-if="!user.id" v-model="user.password" placeholder="Senha *" show-password /></el-row>
+    <el-row><el-input v-model="user.uin" placeholder="CPF *" /></el-row>
+    <el-row><el-input v-model="user.address" placeholder="Endereço *" /></el-row>
+
+    <el-row>
+      <el-select v-model="user.residence" placeholder="Residência *">
+        <el-option label="Casa" value="Casa"></el-option>
+        <el-option label="Kitnet" value="Kitnet"></el-option>
+        <el-option label="Apartamento" value="Apartamento"></el-option>
+        <el-option label="Sobrado" value="Grande"></el-option>
+      </el-select>
+      &nbsp; &nbsp;
+      <el-select v-model="user.residenceSize" placeholder="Tamanho da Residência *">
+        <el-option label="Pequena" value="Pequena"></el-option>
+        <el-option label="Média" value="Média"></el-option>
+        <el-option label="Grande" value="Grande"></el-option>
+      </el-select>
+      &nbsp; &nbsp;
+      <el-select v-model="user.income" placeholder="Renda *">
+        <el-option label="Até R$ 1.800,00" value="Até R$ 1.800,00"></el-option>
+        <el-option label="R$ 1.801 até R$ 2.600,00" value="R$ 1.801 até R$ 2.600,00"></el-option>
+        <el-option label="R$2.601 até R$ 4.000,00" value="R$2.601 até R$ 4.000,00"></el-option>
+        <el-option label="R$4.001 até R$ 9.000,00" value="R$4.001 até R$ 9.000,00"></el-option>
+      </el-select>
+    </el-row>
+
+    <el-checkbox v-model="user.hasYard" label="Possui Quintal" />
+    <el-checkbox v-model="user.hasWindowBars" label="Possui Grades/Telas" />
+
+    <template #footer>
+      <el-button @click="closeModal()">Cancelar</el-button>
+      <el-button type="primary" :disabled="!canSave" @click="save()">Salvar</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
-import { ref } from 'vue'
+import { defaultUser } from '@/models/user'
+import { getLocation } from '@/utils/google-maps'
+import { ElMessage } from 'element-plus'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
+//#region Login
 
 const model = ref({
   email: '',
   password: '',
 })
-
-const canLogin = () => !!model.value.email && !!model.value.password
+const canLogin = computed(() => !!model.value.email && !!model.value.password)
 
 const login = async () => {
-  if (!canLogin) return
+  if (!canLogin.value) {
+    ElMessage({
+      type: 'error',
+      message: 'Preencha os campos de usuário e senha',
+    })
 
-  const response = await axios.post('/auth', model.value)
+    return
+  }
 
-  localStorage.setItem('user', JSON.stringify(response.data))
+  try {
+    const response = await axios.post('/auth', model.value)
 
-  if (response.data.user.ongId) router.push('/dashboard')
-  else router.push('/search')
+    localStorage.setItem('user', JSON.stringify(response.data))
+
+    if (response.data.user.ongId) router.push('/dashboard')
+    else router.push('/search')
+
+    ElMessage({
+      type: 'success',
+      message: 'Logado com sucesso',
+    })
+  } catch {
+    ElMessage({
+      type: 'error',
+      message: 'Login inválido',
+    })
+  }
 }
+
+//#endregion Login
+
+//#region Registration
+
+const isModalOpen = ref(false)
+const user = ref(defaultUser())
+
+const canSave = computed(() => {
+  return (
+    !!user.value.name &&
+    !!user.value.email &&
+    !!user.value.password &&
+    !!user.value.uin &&
+    !!user.value.address &&
+    !!user.value.residence &&
+    !!user.value.residenceSize &&
+    !!user.value.income
+  )
+})
+
+const closeModal = () => {
+  isModalOpen.value = false
+  user.value = defaultUser()
+}
+
+const save = async () => {
+  if (!canSave.value) {
+    ElMessage({
+      type: 'error',
+      message: 'Preencha todos os campos obrigatórios',
+    })
+
+    return
+  }
+
+  try {
+    const location = await getLocation(user.value.address)
+
+    user.value.lat = location.lat()
+    user.value.long = location.lng()
+
+    await axios.post('/users', user.value)
+
+    closeModal()
+
+    ElMessage({
+      type: 'success',
+      message: 'Cadastrado com sucesso!',
+    })
+  } catch {
+    ElMessage({
+      type: 'error',
+      message: 'Falha ao registrar',
+    })
+  }
+}
+
+//#endregion Registration
 </script>
 
 <style scoped>
@@ -60,8 +183,8 @@ const login = async () => {
   width: 290px;
 }
 
-.forgot-password {
-  margin-top: 10px;
+.el-row {
+  margin-bottom: 1rem;
 }
 </style>
 

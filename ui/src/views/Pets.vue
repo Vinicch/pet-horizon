@@ -130,13 +130,13 @@ const remove = async () => {
 
       ElMessage({
         type: 'success',
-        message: 'Delete completed',
+        message: 'Removido com sucesso',
       })
     })
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: 'Delete canceled',
+        message: 'Deleção cancelada',
       })
     })
 }
