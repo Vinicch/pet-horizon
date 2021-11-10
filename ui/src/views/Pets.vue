@@ -45,6 +45,8 @@
       <el-option v-for="ong in ongs" :key="ong.id" :label="ong.name" :value="ong.id"></el-option>
     </el-select>
 
+    <input type="file" @change="handleSubmit" />
+
     <template #footer>
       <el-button @click="closeModal()">Cancelar</el-button>
       <el-button v-if="pet.id" type="danger" @click="remove()">Remover</el-button>
@@ -139,6 +141,26 @@ const remove = async () => {
         message: 'Deleção cancelada',
       })
     })
+}
+
+const handleSubmit = (event: Event) => {
+  const input = event.target as HTMLInputElement
+
+  if (input.files) {
+    const file = input.files[0]
+    const reader = new FileReader()
+
+    reader.onloadend = () => {
+      if (reader.result) {
+        const url = reader.result.toString()
+        const base64 = url.split(',')[1]
+
+        pet.value.photo = base64
+      }
+    }
+
+    reader.readAsDataURL(file)
+  }
 }
 
 //#endregion Modal

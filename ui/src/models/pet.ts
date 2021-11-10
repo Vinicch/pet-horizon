@@ -4,8 +4,9 @@ export interface Pet {
   color: string
   size: string
   sex: string
-  personality: string
+  personality?: string
   wasAdopted: boolean
+  photo: string
   ongId: number
 }
 
@@ -18,6 +19,7 @@ export const defaultPet = (): Pet => {
     sex: '',
     personality: '',
     wasAdopted: false,
+    photo: '',
     ongId: 0,
   }
 }
