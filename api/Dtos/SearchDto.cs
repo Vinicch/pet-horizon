@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace apifmu.Dtos
 {
     public class SearchDto
@@ -6,8 +8,10 @@ namespace apifmu.Dtos
 
         public string Color { get; set; }
 
+        [Required]
         public string Size { get; set; }
 
+        [Required]
         public char Sex { get; set; }
 
         public string Personality { get; set; }
