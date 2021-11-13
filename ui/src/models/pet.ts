@@ -5,7 +5,7 @@ export interface Pet {
   breed: string
   color: string
   size: string
-  sex: string
+  sex: 'F' | 'M'
   personality?: string
   wasAdopted: boolean
   photo: string
@@ -19,7 +19,7 @@ export const defaultPet = (): Pet => {
     breed: '',
     color: '',
     size: '',
-    sex: '',
+    sex: 'F',
     personality: '',
     wasAdopted: false,
     photo: '',
