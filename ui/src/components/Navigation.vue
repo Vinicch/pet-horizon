@@ -37,7 +37,7 @@
         <el-button type="info" :disabled="isFirstpet" @click="previous">Ver anterior</el-button>
 
         <div>
-          <el-button type="primary">Adotar</el-button>
+          <el-button type="primary" @click="adopt">Adotar</el-button>
           <el-button type="danger" @click="back">Voltar para busca</el-button>
         </div>
 
@@ -48,7 +48,10 @@
 </template>
 
 <script setup lang="ts">
+import { defaultAdoption } from '@/models/adoption'
 import { defaultPet, Pet } from '@/models/pet'
+import { User } from '@/models/user'
+import axios from 'axios'
 import { computed, ref } from 'vue'
 
 interface Props {
@@ -63,6 +66,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const pet = ref(props.pets[0])
+const adoption = ref(defaultAdoption())
 
 const isFirstpet = computed(() => props.pets[0] === pet.value)
 const isLastPet = computed(() => props.pets[props.pets.length - 1] === pet.value)
@@ -84,15 +88,24 @@ const next = () => {
 }
 
 const back = () => {
+  adoption.value = defaultAdoption()
   pet.value = defaultPet()
 
   emit('back')
 }
 
-// TODO: create request flow
-// const adopt = () => {
+const adopt = async () => {
+  const userData = localStorage.getItem('user') ?? ''
+  const user = JSON.parse(userData).user as User
 
-// }
+  adoption.value.ongId = pet.value.ongId
+  adoption.value.petId = pet.value.id
+  adoption.value.userId = user.id
+
+  await axios.post('/adoptions', adoption.value)
+
+  back()
+}
 </script>
 
 <style scoped lang="scss">
