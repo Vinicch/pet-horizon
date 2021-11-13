@@ -1,3 +1,5 @@
+import { defaultOng, Ong } from './ong'
+
 export interface Pet {
   id: number
   breed: string
@@ -8,6 +10,7 @@ export interface Pet {
   wasAdopted: boolean
   photo: string
   ongId: number
+  ong: Ong
 }
 
 export const defaultPet = (): Pet => {
@@ -21,5 +24,6 @@ export const defaultPet = (): Pet => {
     wasAdopted: false,
     photo: '',
     ongId: 0,
+    ong: defaultOng(),
   }
 }

@@ -152,10 +152,7 @@ const handleSubmit = (event: Event) => {
 
     reader.onloadend = () => {
       if (reader.result) {
-        const url = reader.result.toString()
-        const base64 = url.split(',')[1]
-
-        pet.value.photo = base64
+        pet.value.photo = reader.result.toString()
       }
     }
 
