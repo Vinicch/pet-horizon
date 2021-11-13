@@ -135,7 +135,7 @@ namespace apifmu.Controllers
                 query = query.Where(e => e.Personality == dto.Personality);
             }
 
-            return await query.Include(e => e.Ong).ToListAsync();
+            return await query.Where(e => !e.WasAdopted).Include(e => e.Ong).ToListAsync();
         }
 
         double CalculateDistance(User user, Ong ong)
