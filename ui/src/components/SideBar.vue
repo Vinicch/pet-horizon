@@ -15,7 +15,7 @@
     <template v-if="isOng">
       <el-menu-item index="/dashboard">
         <i class="fas fa-columns" /> &nbsp;
-        <span>Dashboard</span>
+        <span>Adoções</span>
       </el-menu-item>
       <el-menu-item index="/ongs">
         <i class="fas fa-paw" /> &nbsp;

@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import BaseApp from '@/views/Base.vue'
-import Dashboard from '@/views/Dashboard.vue'
 import Login from '@/views/Login.vue'
-import Ongs from '@/views/ONGs.vue'
-import Pets from '@/views/Pets.vue'
-import Users from '@/views/Users.vue'
-import Search from '@/views/Search.vue'
-import Requests from '@/views/Requests.vue'
+import Adoptions from '@/views/ONG/Adoptions.vue'
+import Ongs from '@/views/ONG/ONGs.vue'
+import Pets from '@/views/ONG/Pets.vue'
+import Users from '@/views/ONG/Users.vue'
+import Search from '@/views/client/Search.vue'
+import Requests from '@/views/client/Requests.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,7 +20,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/dashboard',
         name: 'Dashboard',
-        component: Dashboard,
+        component: Adoptions,
       },
       {
         path: 'ongs',

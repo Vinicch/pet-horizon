@@ -1,5 +1,6 @@
 <template>
-  <h1>Dashboard</h1>
+  <h1>Processos de Adoção</h1>
+  <!-- TODO: create adoption response flow -->
 </template>
 
 <style lang="scss" scoped>
