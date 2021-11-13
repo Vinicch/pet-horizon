@@ -14,6 +14,9 @@
       <span>Porte</span>
       <el-input v-model="pet.size" disabled></el-input>
 
+      <span>Personalidade</span>
+      <el-input v-model="pet.personality" disabled></el-input>
+
       <span>Sexo</span>
       <br />
       <el-radio v-model="pet.sex" disabled label="F" size="medium">Feminino</el-radio>
@@ -24,22 +27,72 @@
       <span>Nome</span>
       <el-input v-model="pet.ong.name" disabled></el-input>
 
+      <span>CNPJ</span>
+      <el-input v-model="pet.ong.uin" disabled></el-input>
+
       <span>Endereço</span>
       <el-input v-model="pet.ong.address" disabled></el-input>
+
+      <el-row class="buttons-row">
+        <el-button type="info" :disabled="isFirstpet" @click="previous">Ver anterior</el-button>
+
+        <div>
+          <el-button type="primary">Adotar</el-button>
+          <el-button type="danger" @click="back">Voltar para busca</el-button>
+        </div>
+
+        <el-button type="info" :disabled="isLastPet" @click="next">Ver próximo</el-button>
+      </el-row>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Pet } from '@/models/pet'
-import { ref } from 'vue'
+import { defaultPet, Pet } from '@/models/pet'
+import { computed, ref } from 'vue'
 
 interface Props {
   pets: Pet[]
 }
 
+interface Emits {
+  (e: 'back'): void
+}
+
 const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
+
 const pet = ref(props.pets[0])
+
+const isFirstpet = computed(() => props.pets[0] === pet.value)
+const isLastPet = computed(() => props.pets[props.pets.length - 1] === pet.value)
+
+const previous = () => {
+  if (!isFirstpet.value) {
+    const index = props.pets.indexOf(pet.value)
+
+    pet.value = props.pets[index - 1]
+  }
+}
+
+const next = () => {
+  if (!isLastPet.value) {
+    const index = props.pets.indexOf(pet.value)
+
+    pet.value = props.pets[index + 1]
+  }
+}
+
+const back = () => {
+  pet.value = defaultPet()
+
+  emit('back')
+}
+
+// TODO: create request flow
+// const adopt = () => {
+
+// }
 </script>
 
 <style scoped lang="scss">
@@ -51,5 +104,10 @@ const pet = ref(props.pets[0])
 .el-input {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.buttons-row {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

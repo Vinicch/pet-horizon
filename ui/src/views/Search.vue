@@ -27,7 +27,7 @@
     </div>
   </template>
   <template v-else>
-    <Navigation :pets="result" />
+    <Navigation :pets="result" @back="reset" />
   </template>
 </template>
 
@@ -40,7 +40,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, ref } from 'vue'
 import { Pet } from '@/models/pet'
 
-// TODO: create request/cancel flow
 const isNavigating = ref(false)
 const model = ref(defaultSearch())
 const result = ref<Pet[]>([])
@@ -73,6 +72,12 @@ const search = async () => {
 
   result.value = response.data
   isNavigating.value = true
+}
+
+const reset = () => {
+  result.value = []
+  model.value = defaultSearch()
+  isNavigating.value = false
 }
 </script>
 
