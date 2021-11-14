@@ -172,8 +172,8 @@ const save = (isApproved: boolean) => {
 
   if (!isApproved) {
     ElMessageBox.prompt('Descreva a razão da reprovação')
-      .then((value) => {
-        adoption.value.disapprovalReason = value
+      .then((result) => {
+        adoption.value.disapprovalReason = result.value
 
         updateAdoption()
       })
@@ -198,8 +198,6 @@ const updateAdoption = async () => {
 }
 
 //#endregion Modal
-
-// TODO: create adoption response flow
 </script>
 
 <style scoped lang="scss">
