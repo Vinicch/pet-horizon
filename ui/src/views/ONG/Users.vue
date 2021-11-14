@@ -25,7 +25,7 @@
   </el-table>
 
   <!-- Modal -->
-  <el-dialog v-model="isModalVisible" title="Criar usuário" :before-close="closeModal">
+  <el-dialog v-model="isModalVisible" :before-close="closeModal">
     <el-input v-model="user.name" placeholder="Nome" />
     <el-input v-model="user.email" placeholder="E-mail" />
     <el-input v-if="!user.id" v-model="user.password" placeholder="Senha" show-password />

@@ -22,7 +22,7 @@
   </el-table>
 
   <!-- Modal -->
-  <el-dialog v-model="isModalVisible" title="Cadastrar pet" :before-close="closeModal">
+  <el-dialog v-model="isModalVisible" :before-close="closeModal">
     <el-input v-model="pet.breed" placeholder="Raça" />
 
     <el-input v-model="pet.color" placeholder="Cor" />

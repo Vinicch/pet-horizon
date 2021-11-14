@@ -16,7 +16,7 @@
   </el-table>
 
   <!-- Modal -->
-  <el-dialog v-model="isModalVisible" title="Cadastrar ONG" :before-close="closeModal">
+  <el-dialog v-model="isModalVisible" :before-close="closeModal">
     <el-input v-model="ong.name" placeholder="Nome" />
     <el-input v-model="ong.uin" placeholder="CNPJ" />
     <el-input v-model="ong.address" placeholder="Endereço" />
