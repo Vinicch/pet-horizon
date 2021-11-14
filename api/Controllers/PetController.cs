@@ -55,6 +55,9 @@ namespace apifmu.Controllers
         {
             try
             {
+                entity.Ong = null;
+                entity.User = null;
+
                 entity.Id = new Random().Next(1, int.MaxValue);
 
                 _dbContext.Pet.Add(entity);
@@ -72,6 +75,9 @@ namespace apifmu.Controllers
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] Pet entity)
         {
+            entity.Ong = null;
+            entity.User = null;
+
             _dbContext.Pet.Update(entity);
 
             await _dbContext.SaveChangesAsync();

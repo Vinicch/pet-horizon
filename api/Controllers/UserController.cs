@@ -45,6 +45,8 @@ namespace apifmu.Controllers
         {
             try
             {
+                entity.Ong = null;
+
                 entity.Id = new Random().Next(1, int.MaxValue);
                 entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password);
 
@@ -63,6 +65,8 @@ namespace apifmu.Controllers
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] User entity)
         {
+            entity.Ong = null;
+
             _dbContext.User.Update(entity);
 
             await _dbContext.SaveChangesAsync();

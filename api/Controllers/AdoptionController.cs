@@ -88,6 +88,10 @@ namespace apifmu.Controllers
                 await _dbContext.SaveChangesAsync();
             }
 
+            entity.Ong = null;
+            entity.Pet = null;
+            entity.User = null;
+
             _dbContext.Adoption.Update(entity);
 
             await _dbContext.SaveChangesAsync();
