@@ -44,6 +44,7 @@ namespace apifmu.Controllers
                 .Include(e => e.Ong)
                 .Include(e => e.Pet)
                 .Include(e => e.User)
+                .OrderByDescending(e => e.Situation)
                 .ToListAsync();
 
             return Ok(entities);
@@ -54,6 +55,10 @@ namespace apifmu.Controllers
         {
             try
             {
+                entity.Ong = null;
+                entity.Pet = null;
+                entity.User = null;
+
                 entity.Id = new Random().Next(1, int.MaxValue);
 
                 _dbContext.Adoption.Add(entity);
