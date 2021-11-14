@@ -167,13 +167,15 @@ const closeModal = () => {
   adoption.value = defaultAdoption()
 }
 
-const save = async (isApproved: boolean) => {
+const save = (isApproved: boolean) => {
   adoption.value.situation = isApproved ? 'A' : 'R'
 
   if (!isApproved) {
     ElMessageBox.prompt('Descreva a razão da reprovação')
       .then((value) => {
         adoption.value.disapprovalReason = value
+
+        updateAdoption()
       })
       .catch(() => {
         ElMessage({
@@ -181,8 +183,14 @@ const save = async (isApproved: boolean) => {
           message: 'Processo cancelado',
         })
       })
+
+    return
   }
 
+  updateAdoption()
+}
+
+const updateAdoption = async () => {
   await axios.put('/adoptions', adoption.value)
 
   getAll()
