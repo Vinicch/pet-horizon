@@ -3,7 +3,7 @@
 
   <el-button type="primary" @click="openModal()">Cadastrar Pet</el-button>
 
-  <el-table :data="pets" :stripe="true" :highlight-current-row="true" style="width: fit-content">
+  <el-table :data="pets" stripe highlight-current-row style="width: fit-content">
     <el-table-column align="center">
       <template #default="scope">
         <i class="fas fa-eye hover" @click="openModal(scope.row.id)" />
