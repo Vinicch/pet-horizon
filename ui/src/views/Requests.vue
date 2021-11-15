@@ -125,7 +125,7 @@
     </el-row>
 
     <template #footer>
-      <span v-if="adoption.situation === 'W'">
+      <span v-if="adoption.situation === 'W' && isOngUser">
         <el-button type="success" @click="save(true)">Aprovar</el-button>
         <el-button type="danger" @click="save(false)">Reprovar</el-button>
       </span>
@@ -136,7 +136,7 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { Adoption, defaultAdoption } from '@/models/adoption'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { User } from '@/models/user'
 
@@ -176,6 +176,13 @@ const getSituation = (adoption: Adoption) => {
 
 const isModalVisible = ref(false)
 const adoption = ref(defaultAdoption())
+
+const isOngUser = computed(() => {
+  const dataString = localStorage.getItem('user') ?? ''
+  const user = JSON.parse(dataString).user as User
+
+  return !!user.ongId
+})
 
 const openModal = (id: number) => {
   adoption.value = adoptions.value.find((e) => e.id === id) ?? adoption.value
