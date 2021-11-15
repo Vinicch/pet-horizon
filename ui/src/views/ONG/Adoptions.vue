@@ -26,6 +26,16 @@
     :title="`${adoption.user.name} - ${adoption.pet.breed} - ${getSituation(adoption)}`"
     :before-close="closeModal"
   >
+    <template v-if="adoption.situation === 'R' && adoption.disapprovalReason">
+      <h3>Motivo da reprovação</h3>
+
+      <el-row>
+        <el-col :span="11">
+          <el-input v-model="adoption.disapprovalReason" disabled></el-input>
+        </el-col>
+      </el-row>
+    </template>
+
     <h3>Informações do cliente</h3>
 
     <el-row>
