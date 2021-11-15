@@ -23,29 +23,62 @@
 
   <!-- Modal -->
   <el-dialog v-model="isModalVisible" :before-close="closeModal">
-    <el-input v-model="pet.breed" placeholder="Raça" />
+    <el-row>
+      <el-col :span="11">
+        <span>Raça</span>
+        <el-input v-model="pet.breed" />
+      </el-col>
 
-    <el-input v-model="pet.color" placeholder="Cor" />
+      <el-col :span="11">
+        <span>Cor</span>
+        <el-input v-model="pet.color" />
+      </el-col>
+    </el-row>
 
-    <el-select v-model="pet.size" placeholder="Porte">
-      <el-option label="Mini" value="Mini"></el-option>
-      <el-option label="Pequeno" value="Pequeno"></el-option>
-      <el-option label="Médio" value="Médio"></el-option>
-      <el-option label="Grande" value="Grande"></el-option>
-      <el-option label="Gigante" value="Gigante"></el-option>
-    </el-select>
+    <el-row>
+      <el-col :span="11">
+        <span>Personalidade</span>
+        <el-input v-model="pet.personality" />
+      </el-col>
 
-    <el-radio v-model="pet.sex" label="F" size="medium">Feminino</el-radio>
-    <el-radio v-model="pet.sex" label="M" size="medium">Masculino</el-radio>
+      <el-col :span="11">
+        <span>Sexo</span>
+        <br />
+        <el-radio v-model="pet.sex" label="F" size="medium">Feminino</el-radio>
+        <el-radio v-model="pet.sex" label="M" size="medium">Masculino</el-radio>
+      </el-col>
+    </el-row>
 
-    <el-input v-model="pet.personality" placeholder="Personalidade" />
+    <el-row>
+      <el-col :span="11">
+        <span>Porte</span>
+        <br />
+        <el-select v-model="pet.size" style="width: 100%">
+          <el-option label="Mini" value="Mini"></el-option>
+          <el-option label="Pequeno" value="Pequeno"></el-option>
+          <el-option label="Médio" value="Médio"></el-option>
+          <el-option label="Grande" value="Grande"></el-option>
+          <el-option label="Gigante" value="Gigante"></el-option>
+        </el-select>
+      </el-col>
 
-    <el-select v-model="pet.ongId" placeholder="ONG associada">
-      <el-option :label="'Nenhuma ONG selecionada'" :value="0"></el-option>
-      <el-option v-for="ong in ongs" :key="ong.id" :label="ong.name" :value="ong.id"></el-option>
-    </el-select>
+      <el-col :span="11">
+        <span>ONG associada</span>
+        <br />
+        <el-select v-model="pet.ongId" style="width: 100%">
+          <el-option :label="'Nenhuma ONG selecionada'" :value="0"></el-option>
+          <el-option v-for="ong in ongs" :key="ong.id" :label="ong.name" :value="ong.id"></el-option>
+        </el-select>
+      </el-col>
+    </el-row>
 
-    <input type="file" @change="handleSubmit" />
+    <el-row>
+      <el-col>
+        <span>Foto do pet</span>
+        <br />
+        <input type="file" @change="handleSubmit" />
+      </el-col>
+    </el-row>
 
     <template #footer>
       <el-button @click="closeModal()">Cancelar</el-button>

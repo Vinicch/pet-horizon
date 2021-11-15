@@ -17,9 +17,23 @@
 
   <!-- Modal -->
   <el-dialog v-model="isModalVisible" :before-close="closeModal">
-    <el-input v-model="ong.name" placeholder="Nome" />
-    <el-input v-model="ong.uin" placeholder="CNPJ" />
-    <el-input v-model="ong.address" placeholder="Endereço" />
+    <el-row>
+      <el-col :span="11">
+        <span>Nome</span>
+        <el-input v-model="ong.name" />
+      </el-col>
+      <el-col :span="11">
+        <span>CNPJ</span>
+        <el-input v-model="ong.uin" />
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="11">
+        <span>Endereço</span>
+        <el-input v-model="ong.address" />
+      </el-col>
+    </el-row>
 
     <template #footer>
       <el-button @click="closeModal()">Cancelar</el-button>

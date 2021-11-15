@@ -26,39 +26,80 @@
 
   <!-- Modal -->
   <el-dialog v-model="isModalVisible" :before-close="closeModal">
-    <el-input v-model="user.name" placeholder="Nome" />
-    <el-input v-model="user.email" placeholder="E-mail" />
-    <el-input v-if="!user.id" v-model="user.password" placeholder="Senha" show-password />
-    <el-input v-model="user.uin" placeholder="CPF" />
-    <el-input v-model="user.address" placeholder="Endereço" />
+    <el-row>
+      <el-col :span="11">
+        <span>Nome</span>
+        <el-input v-model="user.name" />
+      </el-col>
 
-    <el-select v-model="user.residence" placeholder="Residência">
-      <el-option label="Casa" value="Casa"></el-option>
-      <el-option label="Kitnet" value="Kitnet"></el-option>
-      <el-option label="Apartamento" value="Apartamento"></el-option>
-      <el-option label="Sobrado" value="Grande"></el-option>
-    </el-select>
+      <el-col :span="11">
+        <span>E-mail</span>
+        <el-input v-model="user.email" />
+      </el-col>
 
-    <el-select v-model="user.residenceSize" placeholder="Tamanho da Residência">
-      <el-option label="Pequena" value="Pequena"></el-option>
-      <el-option label="Média" value="Média"></el-option>
-      <el-option label="Grande" value="Grande"></el-option>
-    </el-select>
+      <el-col v-if="!user.id" :span="11">
+        <span>Senha</span>
+        <el-input v-model="user.password" show-password />
+      </el-col>
 
-    <el-checkbox v-model="user.hasYard" label="Possui Quintal" />
-    <el-checkbox v-model="user.hasWindowBars" label="Possui Grades/Telas" />
-    <br />
-    <el-select v-model="user.income" placeholder="Renda">
-      <el-option label="Até R$ 1.800,00" value="Até R$ 1.800,00"></el-option>
-      <el-option label="R$ 1.801 até R$ 2.600,00" value="R$ 1.801 até R$ 2.600,00"></el-option>
-      <el-option label="R$2.601 até R$ 4.000,00" value="R$2.601 até R$ 4.000,00"></el-option>
-      <el-option label="R$4.001 até R$ 9.000,00" value="R$4.001 até R$ 9.000,00"></el-option>
-    </el-select>
+      <el-col :span="11">
+        <span>CPF</span>
+        <el-input v-model="user.uin" />
+      </el-col>
 
-    <el-select v-model="user.ongId" placeholder="ONG associada">
-      <el-option :label="'Nenhuma'" :value="null"></el-option>
-      <el-option v-for="ong in ongs" :key="ong.id" :label="ong.name" :value="ong.id"></el-option>
-    </el-select>
+      <el-col :span="11">
+        <span>Endereço</span>
+        <el-input v-model="user.address" />
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="11">
+        <span>Residência</span>
+        <br />
+        <el-select v-model="user.residence" style="width: 100%">
+          <el-option label="Casa" value="Casa"></el-option>
+          <el-option label="Kitnet" value="Kitnet"></el-option>
+          <el-option label="Apartamento" value="Apartamento"></el-option>
+          <el-option label="Sobrado" value="Grande"></el-option>
+        </el-select>
+      </el-col>
+
+      <el-col :span="11">
+        <span>Tamanho da Residência</span>
+        <br />
+        <el-select v-model="user.residenceSize" style="width: 100%">
+          <el-option label="Pequena" value="Pequena"></el-option>
+          <el-option label="Média" value="Média"></el-option>
+          <el-option label="Grande" value="Grande"></el-option>
+        </el-select>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="11">
+        <span>Renda</span>
+        <br />
+        <el-select v-model="user.income">
+          <el-option label="Até R$ 1.800,00" value="Até R$ 1.800,00"></el-option>
+          <el-option label="R$ 1.801 até R$ 2.600,00" value="R$ 1.801 até R$ 2.600,00"></el-option>
+          <el-option label="R$2.601 até R$ 4.000,00" value="R$2.601 até R$ 4.000,00"></el-option>
+          <el-option label="R$4.001 até R$ 9.000,00" value="R$4.001 até R$ 9.000,00"></el-option>
+        </el-select>
+
+        <el-checkbox v-model="user.hasYard" label="Possui Quintal" />
+        <el-checkbox v-model="user.hasWindowBars" label="Possui Grades/Telas" />
+      </el-col>
+
+      <el-col :span="11">
+        <span>ONG associada</span>
+        <br />
+        <el-select v-model="user.ongId" style="width: 100%">
+          <el-option :label="'Nenhuma'" :value="null"></el-option>
+          <el-option v-for="ong in ongs" :key="ong.id" :label="ong.name" :value="ong.id"></el-option>
+        </el-select>
+      </el-col>
+    </el-row>
 
     <template #footer>
       <el-button @click="closeModal()">Cancelar</el-button>
