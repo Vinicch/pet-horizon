@@ -91,7 +91,7 @@ const login = async () => {
 
     localStorage.setItem('user', JSON.stringify(response.data))
 
-    if (response.data.user.ongId) router.push('/dashboard')
+    if (response.data.user.ongId) router.push('/requests')
     else router.push('/search')
 
     ElMessage({

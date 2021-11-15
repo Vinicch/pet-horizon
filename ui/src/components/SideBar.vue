@@ -11,12 +11,21 @@
       <el-button type="primary" size="mini" plain @click="logout()">Logout</el-button>
     </el-menu-item>
 
-    <!-- Admin -->
-    <template v-if="isOng">
-      <el-menu-item index="/dashboard">
-        <i class="fas fa-columns" /> &nbsp;
-        <span>Adoções</span>
+    <el-menu-item index="/requests">
+      <i class="fas fa-list-ul" /> &nbsp;
+      <span>Solicitações</span>
+    </el-menu-item>
+
+    <!-- Client -->
+    <template v-if="!isOng">
+      <el-menu-item index="/search">
+        <i class="fas fa-search" /> &nbsp;
+        <span>Busca</span>
       </el-menu-item>
+    </template>
+
+    <!-- Admin -->
+    <template v-else>
       <el-menu-item index="/ongs">
         <i class="fas fa-paw" /> &nbsp;
         <span>ONGs</span>
@@ -28,18 +37,6 @@
       <el-menu-item index="/users">
         <i class="fas fa-user" /> &nbsp;
         <span>Usuários</span>
-      </el-menu-item>
-    </template>
-
-    <!-- Client -->
-    <template v-else>
-      <el-menu-item index="/search">
-        <i class="fas fa-search" /> &nbsp;
-        <span>Busca</span>
-      </el-menu-item>
-      <el-menu-item index="/requests">
-        <i class="fas fa-list-ul" /> &nbsp;
-        <span>Solicitações</span>
       </el-menu-item>
     </template>
   </el-menu>
