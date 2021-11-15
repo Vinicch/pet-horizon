@@ -95,6 +95,7 @@ const reset = () => {
 
 .search-form {
   width: 30vw;
+  background-color: #faf8ff;
 }
 
 .search-button {

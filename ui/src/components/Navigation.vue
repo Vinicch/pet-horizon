@@ -125,6 +125,11 @@ const adopt = async () => {
   display: block;
 }
 
+.search-form {
+  width: 30vw;
+  background-color: #faf8ff;
+}
+
 .el-input {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
