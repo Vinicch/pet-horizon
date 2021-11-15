@@ -52,6 +52,7 @@ import { defaultAdoption } from '@/models/adoption'
 import { defaultPet, Pet } from '@/models/pet'
 import { User } from '@/models/user'
 import axios from 'axios'
+import { ElMessageBox } from 'element-plus'
 import { computed, ref } from 'vue'
 
 interface Props {
@@ -95,6 +96,12 @@ const back = () => {
 }
 
 const adopt = async () => {
+  await ElMessageBox.confirm('Tem certeza que deseja adotar este animal?', undefined, {
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Não',
+    type: 'warning',
+  })
+
   const userData = localStorage.getItem('user') ?? ''
   const user = JSON.parse(userData).user as User
 
@@ -103,6 +110,10 @@ const adopt = async () => {
   adoption.value.userId = user.id
 
   await axios.post('/adoptions', adoption.value)
+
+  ElMessageBox.alert(
+    'Uma solicitação foi enviada para a unidade. Caso seja aprovada, poderá ir a unidade assinar os termos e recolher seu pet!',
+  )
 
   back()
 }
