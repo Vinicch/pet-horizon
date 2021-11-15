@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import BaseApp from '@/views/Base.vue'
 import Login from '@/views/Login.vue'
-import Adoptions from '@/views/Adoptions.vue'
+import Requests from '@/views/Requests.vue'
 import Ongs from '@/views/ONG/ONGs.vue'
 import Pets from '@/views/ONG/Pets.vue'
 import Users from '@/views/ONG/Users.vue'
@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'requests',
         name: 'Dashboard',
-        component: Adoptions,
+        component: Requests,
       },
       {
         path: 'ongs',

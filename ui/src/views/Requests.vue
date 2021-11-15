@@ -138,13 +138,23 @@ import axios from 'axios'
 import { Adoption, defaultAdoption } from '@/models/adoption'
 import { onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { User } from '@/models/user'
 
 //#region List
 
 const adoptions = ref<Adoption[]>([])
 
 const getAll = () => {
-  axios.get('/adoptions').then((resp) => (adoptions.value = resp.data))
+  axios.get('/adoptions').then((resp) => {
+    adoptions.value = resp.data
+
+    const userData = localStorage.getItem('user') ?? ''
+    const user = JSON.parse(userData).user as User
+
+    if (!user.ongId) {
+      adoptions.value = adoptions.value.filter((e) => e.userId === user.id)
+    }
+  })
 }
 
 onMounted(() => getAll())
