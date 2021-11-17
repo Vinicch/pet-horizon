@@ -10,6 +10,7 @@
     </el-table-column>
     <el-table-column prop="user.name" label="Nome do cliente" width="180"></el-table-column>
     <el-table-column prop="user.uin" label="CPF do cliente" width="180"></el-table-column>
+    <el-table-column prop="pet.type" label="Tipo do pet" width="180"></el-table-column>
     <el-table-column prop="pet.breed" label="Raça do pet" width="180"></el-table-column>
     <el-table-column prop="pet.size" label="Porte do pet" width="180"></el-table-column>
     <el-table-column prop="pet.sex" label="Sexo do pet" width="180">

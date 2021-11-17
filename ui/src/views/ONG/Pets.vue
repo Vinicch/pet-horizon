@@ -9,6 +9,7 @@
         <i class="fas fa-eye hover" @click="openModal(scope.row.id)" />
       </template>
     </el-table-column>
+    <el-table-column prop="type" label="Tipo" width="180" />
     <el-table-column prop="breed" label="Raça" width="180" />
     <el-table-column prop="color" label="Cor" width="180" />
     <el-table-column prop="size" label="Porte" width="180" />
