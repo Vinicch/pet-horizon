@@ -1,15 +1,17 @@
 export interface Search {
+  type: string
   breed?: string
   color?: string
   size: string
-  sex: string
+  sex: 'F' | 'M'
   personality?: string
   userId: number
 }
 
 export const defaultSearch = (): Search => {
   return {
-    sex: '',
+    type: '',
+    sex: 'F',
     size: '',
     userId: 0,
   }

@@ -82,6 +82,11 @@
 
     <el-row>
       <el-col :span="11">
+        <span>Tipo</span>
+        <el-input v-model="adoption.pet.type" disabled></el-input>
+      </el-col>
+
+      <el-col :span="11">
         <span>Raça</span>
         <el-input v-model="adoption.pet.breed" disabled></el-input>
       </el-col>

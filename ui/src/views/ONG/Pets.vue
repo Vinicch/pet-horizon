@@ -42,10 +42,14 @@
       </el-col>
 
       <el-col :span="11">
-        <span>Sexo</span>
+        <span>Tipo</span>
         <br />
-        <el-radio v-model="pet.sex" label="F" size="medium">Feminino</el-radio>
-        <el-radio v-model="pet.sex" label="M" size="medium">Masculino</el-radio>
+        <el-select v-model="pet.type" style="width: 100%">
+          <el-option label="Gato" value="Gato"></el-option>
+          <el-option label="Cachorro" value="Cachorro"></el-option>
+          <el-option label="Pássaro" value="Pássaro"></el-option>
+          <el-option label="Hamster" value="Hamster"></el-option>
+        </el-select>
       </el-col>
     </el-row>
 
@@ -73,7 +77,14 @@
     </el-row>
 
     <el-row>
-      <el-col>
+      <el-col :span="11">
+        <span>Sexo</span>
+        <br />
+        <el-radio v-model="pet.sex" label="F" size="medium">Feminino</el-radio>
+        <el-radio v-model="pet.sex" label="M" size="medium">Masculino</el-radio>
+      </el-col>
+
+      <el-col :span="11">
         <span>Foto do pet</span>
         <br />
         <input type="file" @change="handleSubmit" />
@@ -115,6 +126,7 @@ const pet = ref(defaultPet())
 const ongs = ref<Ong[]>([])
 const canSave = computed(() => {
   return (
+    !!pet.value.type &&
     !!pet.value.breed &&
     !!pet.value.color &&
     !!pet.value.size &&

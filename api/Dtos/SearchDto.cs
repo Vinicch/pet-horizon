@@ -4,6 +4,8 @@ namespace apifmu.Dtos
 {
     public class SearchDto
     {
+        public string Type { get; set; }
+
         public string Breed { get; set; }
 
         public string Color { get; set; }

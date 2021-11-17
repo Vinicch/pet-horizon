@@ -8,6 +8,13 @@
           <el-input v-model="model.breed" placeholder="Raça"></el-input>
           <el-input v-model="model.color" placeholder="Cor"></el-input>
 
+          <el-select v-model="model.type" placeholder="Tipo *">
+            <el-option label="Gato" value="Gato"></el-option>
+            <el-option label="Cachorro" value="Cachorro"></el-option>
+            <el-option label="Pássaro" value="Pássaro"></el-option>
+            <el-option label="Hamster" value="Hamster"></el-option>
+          </el-select>
+
           <el-select v-model="model.size" placeholder="Porte *">
             <el-option label="Mini" value="Mini"></el-option>
             <el-option label="Pequeno" value="Pequeno"></el-option>
@@ -44,13 +51,13 @@ const isNavigating = ref(false)
 const model = ref(defaultSearch())
 const result = ref<Pet[]>([])
 
-const canSearch = computed(() => !!model.value.size && !!model.value.sex)
+const canSearch = computed(() => !!model.value.type && !!model.value.size && !!model.value.sex)
 
 const search = async () => {
   if (!canSearch.value) {
     ElMessage({
       type: 'error',
-      message: 'Preencha, no mínimo, os campos de porte e sexo',
+      message: 'Preencha, no mínimo, os campos de tipo, porte e sexo',
     })
   }
 

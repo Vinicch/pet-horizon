@@ -2,6 +2,7 @@ import { defaultOng, Ong } from './ong'
 
 export interface Pet {
   id: number
+  type: string
   breed: string
   color: string
   size: string
@@ -16,6 +17,7 @@ export interface Pet {
 export const defaultPet = (): Pet => {
   return {
     id: 0,
+    type: '',
     breed: '',
     color: '',
     size: '',

@@ -124,7 +124,7 @@ namespace apifmu.Controllers
 
         async Task<List<Pet>> FilterPets(SearchDto dto)
         {
-            var query = _dbContext.Pet.Where(e => e.Size == dto.Size).Where(e => e.Sex == dto.Sex);
+            var query = _dbContext.Pet.Where(e => e.Type == dto.Type).Where(e => e.Size == dto.Size).Where(e => e.Sex == dto.Sex);
 
             if (!string.IsNullOrWhiteSpace(dto.Breed))
             {

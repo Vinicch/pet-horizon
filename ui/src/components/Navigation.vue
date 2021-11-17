@@ -5,6 +5,9 @@
 
       <h3>Informações do animal</h3>
 
+      <span>Tipo</span>
+      <el-input v-model="pet.type" disabled></el-input>
+
       <span>Raça</span>
       <el-input v-model="pet.breed" disabled></el-input>
 
