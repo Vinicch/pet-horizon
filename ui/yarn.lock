@@ -913,10 +913,10 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.4.tgz#ecda5712b61ac852c760d8b3c79c96adca5554e5"
   integrity sha512-eYm8vijH/hpzr/6/1CJ/V/Eb1xQFW2nnUKArb3z+yUWv7HTwj6M7SP957oMjfZjAHU6qpoNc2wQvIxBLWYa/Jg==
 
-"@googlemaps/js-api-loader@^1.12.8":
-  version "1.12.8"
-  resolved "https://registry.yarnpkg.com/@googlemaps/js-api-loader/-/js-api-loader-1.12.8.tgz#1dec39c7ada607270679248662c02d6f0705e8e4"
-  integrity sha512-h1RNVIJkHWL4UrdJo8fwECJwSRg8CSIfTEtPdzvThcji7tAPvVBDVBPzvPKhvl8e8mWEGPhnYOt6kPfSxJL+vQ==
+"@googlemaps/js-api-loader@^1.13.2":
+  version "1.13.4"
+  resolved "https://registry.yarnpkg.com/@googlemaps/js-api-loader/-/js-api-loader-1.13.4.tgz#0ed7068383eca4c754c63436bc13de41c69184e7"
+  integrity sha512-KB5G+k9b6cyQnGQmcKRXxtmkDrNomfvZfCdz8fVk9gKb7esQsJ+Sl+NTfPjXxSXJTEXi1eWi5z0cZrwivDcLDg==
   dependencies:
     fast-deep-equal "^3.1.3"
 
